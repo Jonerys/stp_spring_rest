@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Список товаров</title>
+</head>
+<body>
+<div th:switch="${goods}">
+    <h2 th:case="null">Товары не найдены!</h2>
+    <div th:case="*">
+        <h2>Товары</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ИД</th>
+                <th>Наименование</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="good : ${goods}">
+                <td th:text="${good.id}"></td>
+                <td th:text="${good.name}"></td>
+                <td><a th:href="@{goods-update/{id}(id=${good.id})}">Изменить</a></td>
+                <td><a th:href="@{goods-delete/{id}(id=${good.id})}">Удалить</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/goods-create">Добавить товар</a></p><br>
+    <p><a href="/welcome" style="font-size: 16pt">Вернуться на главную страницу</a></p>
+</div>
+</body>
+</html>

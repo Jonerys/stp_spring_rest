@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<body>
+
+
+<script>
+    var url  = "http://localhost:8080/gw";
+    var xhr  = new XMLHttpRequest()
+    xhr.open('GET', url, true)
+    xhr.onload = function () {
+        var warehouse = JSON.parse(xhr.responseText);
+        if (xhr.readyState == 4 && xhr.status == "200") {
+            console.log(warehouse.name);
+            console.log(warehouse.goods[0].name)
+        } else {
+            console.error(warehouse);
+        }
+    }
+    xhr.send(null);
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Default ignored files
+target/
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../:\Users\Jonerys\IdeaProjects\springcrud\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

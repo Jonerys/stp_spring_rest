@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Список складов</title>
+</head>
+<body>
+<div th:switch="${warehouses}">
+    <h2 th:case="null">Склады не найдены!</h2>
+    <div th:case="*">
+        <h2>Склады</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ИД</th>
+                <th>Наименование</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="warehouse : ${warehouses}">
+                <td th:text="${warehouse.id}"></td>
+                <td th:text="${warehouse.name}"></td>
+                <td><a th:href="@{warehouses-update/{id}(id=${warehouse.id})}">Изменить</a></td>
+                <td><a th:href="@{warehouses-delete/{id}(id=${warehouse.id})}">Удалить</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/warehouses-create">Добавить склад</a></p><br>
+    <p><a href="/welcome" style="font-size: 16pt">Вернуться на главную страницу</a></p>
+</div>
+</body>
+</html>

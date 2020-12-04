@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить товар</title>
+</head>
+<body>
+<p><h1>Добавить товар</h1></p>
+<form action="#" th:action="@{/goods-create}" th:object="${good}" method="post">
+    <p>
+        <label for="name">Наименование</label>
+        <input type="text" th:field="*{name}" id="name" placeholder="Наименование">
+    </p>
+
+    <p>
+        <input type="submit" value="Добавить" />
+        <input type="submit" onclick="javascript:history.back(); return false;" value="Отмена">
+    </p>
+</form>
+</body>
+</html>
