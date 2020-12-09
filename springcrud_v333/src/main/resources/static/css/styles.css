@@ -13,11 +13,29 @@
     margin-left: 10px;
     border-collapse: collapse;
 }
+#main_table_2{
+    float:left;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 10px;
+    border-collapse: collapse;
+}
 th, td {
     border: 1px solid black;
 }
-.container{
+.container {
+    position: relative;
     width: 70%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.container2 {
+    position: relative;
+    width: 75%;
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;

@@ -49,6 +49,10 @@ public class Warehouse {
         goods.add(good);
     }
 
+    public void deleteGood(Good good) {
+        goods.remove(good);
+    }
+
     @ManyToMany( cascade = { CascadeType.ALL })
     @JoinTable(
             name = "Goodswh",

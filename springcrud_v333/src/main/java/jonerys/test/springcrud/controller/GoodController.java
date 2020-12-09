@@ -26,13 +26,8 @@ public class GoodController {
 
     @RequestMapping(value = "/addgood", method = RequestMethod.POST)
     public void createGood(@RequestBody String data){
-        String temp = null;
-        try {
-            temp = URLDecoder.decode(data, StandardCharsets.UTF_8.toString()).split("&", 2)[1];
-        } catch (Exception e){}
-        String name = temp.split("=", 2)[1];
         Good good = new Good();
-        good.setName(name);
+        good.setName(data);
         gms.save(good);
     }
 
@@ -42,8 +37,8 @@ public class GoodController {
         try {
             temp = URLDecoder.decode(data, StandardCharsets.UTF_8.toString());
         } catch (Exception e){}
-        String id = temp.split("&", 2)[0].split("=", 2)[1];
-        String name = temp.split("&", 2)[1].split("=", 2)[1];
+        String id = temp.split(";", 2)[0];
+        String name = temp.split(";", 2)[1];
         Good good = gms.findById(Integer.parseInt(id));
         good.setName(name);
         gms.save(good);
@@ -51,8 +46,6 @@ public class GoodController {
 
     @RequestMapping(value = "/deletegood", method = RequestMethod.POST)
     public void deleteGood(@RequestBody String data){
-        String temp = data.split("&", 2)[0];
-        String id = temp.split("=", 2)[1];
-        gms.deleteById(Integer.parseInt(id));
+        gms.deleteById(Integer.parseInt(data));
     }
 }

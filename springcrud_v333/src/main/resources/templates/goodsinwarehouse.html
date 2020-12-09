@@ -3,42 +3,118 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Список товаров на складе</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/styles.css" />
-    <script>
-        $(document).ready(function() {
-            getDataFromAPI();
-        });
-        function getDataFromAPI() {
-            $.ajax({
-                url: "/getdata",
-                type: "GET",
-                success: function (data) {
-                    let table = document.getElementById("main_table");
-                    table.replaceChild(document.createElement("tbody"), table.children[0]);
-                    let body = table.children[0];
-                    let tr = document.createElement("tr");
-                    let td = document.createElement("th");
-                    td.innerText = "Название товара";
-                    tr.appendChild(td);
-                    body.appendChild(tr);
-                    for (let i = 0; i < data.goods.length; i++) {
-                        let el = data.goods[i];
-                        tr = document.createElement("tr");
-                        td = document.createElement("td");
-                        td.innerText = el.name;
-                        tr.appendChild(td);
-                        body.appendChild(tr);
-                    }
-                }, error: function (jqXHR, textStatus, errorThrown) {
-                }
-            });
-        }
-    </script>
 </head>
 <body>
 
-
-<table id="main_table"><tbody></tbody></table>
+<div id="app">
+<table id="main_table"><tbody>
+    <tr>
+        <th>Наименование</th>
+    </tr>
+    <tr v-for="curgood in curgoodarray">
+        <td>{{curgood.name}}</td>
+    </tr>
+</tbody></table>
+<div class="container2">
+    <div id="div_add">
+        <button id="add"  onclick="changeVisibility('add', 'add_form')">Добавить</button>
+        <span id="add_form">
+            <select id="select_a" v-model="name2">
+                <option v-for="good in goodsarray">{{good.name}}</option>
+            </select>
+            <input id="sub_i" type="submit" @click="add" value="Подтвердить"/>
+            <button id="cancel" onclick="changeVisibility('add_form', 'add')">Отмена</button>
+        </span></br>
+    </div>
+    <div id="div_upd">
+        <button id="update" onclick="changeVisibility('update', 'update_form')">Редактировать</button>
+        <span id="update_form">
+            <select id="select_uold" v-model="name1">
+                <option v-for="curgood in curgoodarray">{{curgood.name}}</option>
+            </select>
+            <label for="select_unew"> Заменить на: </label>
+            <select id="select_unew" v-model="name2">
+                <option v-for="good in goodsarray">{{good.name}}</option>
+            </select>
+            <input id="sub_u" type="submit" @click="upd" value="Подтвердить"/>
+            <button id="cancel2" onclick="changeVisibility('update_form', 'update')">Отмена</button>
+        </span></br>
+    </div>
+    <div id="div_del">
+        <button id="delete" onclick="changeVisibility('delete', 'delete_form')">Удалить</button>
+        <span id="delete_form">
+            <select id="select_d" v-model="name1">
+                <option v-for="curgood in curgoodarray">{{curgood.name}}</option>
+            </select>
+            <input id="sub_d" type="submit" @click="del" value="Подтвердить"/>
+            <button id="cancel3" onclick="changeVisibility('delete_form', 'delete')">Отмена</button>
+        </span></br>
+    </div>
+</div>
+</div>
+<script>
+    let gwurl = Vue.resource("/getdata");
+    let gurl = Vue.resource("/getgoodslist");
+    let addurl = Vue.resource("/addgtowh");
+    let updateurl = Vue.resource("/updateginwh");
+    let deleteurl = Vue.resource("/deletegfromwh");
+    new Vue({
+        el: "#app",
+        data: {
+            name1: "",
+            name2: "",
+            curgoodarray: [],
+            goodsarray: []
+        },
+        methods: {
+            add: function(){
+                addurl.save(this.name2).then(success => {
+                    this.getCurGoods()
+                }, fail => {
+                    console.log(fail)
+                })
+            },
+            getCurGoods: function() {
+                this.curgoodarray = []
+                gwurl.get().then(result => {
+                    result.json().then(data => {
+                        
+                        data.goods.forEach(element => this.curgoodarray.push(element))
+                    })
+                })
+            },
+            getGoods: function() {
+                this.goodsarray = []
+                gurl.get().then(result => {
+                    result.json().then(data => {
+                        data.forEach(element => this.goodsarray.push(element))
+                    })
+                })
+            },
+            upd: function(){
+                updateurl.save(this.name1 + ";" + this.name2).then(success => {
+                    this.getCurGoods()
+                }, fail => {
+                    console.log(fail)
+                })
+            },
+            del: function(){
+                deleteurl.save(this.name1).then(success => {
+                    this.getCurGoods()
+                }, fail => {
+                    console.log(fail)
+                })
+            }
+        },
+        created: function(){
+            this.getCurGoods() 
+            this.getGoods()
+        }
+    })
+</script>
 </body>
 </html>

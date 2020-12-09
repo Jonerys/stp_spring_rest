@@ -1,7 +1,6 @@
 package jonerys.test.springcrud.controller;
 
 
-import jonerys.test.springcrud.model.Good;
 import jonerys.test.springcrud.model.Role;
 import jonerys.test.springcrud.model.User;
 import jonerys.test.springcrud.model.Warehouse;
@@ -37,11 +36,10 @@ public class WarehouseController {
 
     @RequestMapping(value = "/addwarehouse", method = RequestMethod.POST)
     public void createWarehouse(@RequestBody String data){
-        String temp = null;
+        String name = null;
         try {
-            temp = URLDecoder.decode(data, StandardCharsets.UTF_8.toString()).split("&", 2)[1];
+            name = URLDecoder.decode(data, StandardCharsets.UTF_8.toString());
         } catch (Exception e){}
-        String name = temp.split("=", 2)[1];
         Warehouse warehouse = new Warehouse();
         warehouse.setName(name);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
@@ -59,8 +57,8 @@ public class WarehouseController {
         try {
             temp = URLDecoder.decode(data, StandardCharsets.UTF_8.toString());
         } catch (Exception e){}
-        String id = temp.split("&", 2)[0].split("=", 2)[1];
-        String name = temp.split("&", 2)[1].split("=", 2)[1];
+        String id = temp.split(";", 2)[0];
+        String name = temp.split(";", 2)[1];
         Warehouse warehouse = ws.findById(Integer.parseInt(id));
         String oldName = warehouse.getName();
         warehouse.setName(name);
@@ -73,9 +71,7 @@ public class WarehouseController {
 
     @RequestMapping(value = "/deletewarehouse", method = RequestMethod.POST)
     public void deleteWarehouse(@RequestBody String data){
-        String temp = data.split("&", 2)[0];
-        String id = temp.split("=", 2)[1];
-        us.deleteByLogin(ws.findById(Integer.parseInt(id)).getName());
-        ws.deleteById(Integer.parseInt(id));
+        us.deleteByLogin(ws.findById(Integer.parseInt(data)).getName());
+        ws.deleteById(Integer.parseInt(data));
     }
 }
