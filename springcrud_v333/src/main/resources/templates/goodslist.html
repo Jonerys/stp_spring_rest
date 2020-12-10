@@ -8,11 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="js/script.js"></script>
-    <script>
-        
-    </script>
-
 </head>
+
 <body>
 <div id="app">
 <table id="main_table"><tbody>
@@ -74,38 +71,37 @@
         methods: {
             add: function(){
                 addurl.save(this.name).then(success => {
-                    this.getGoods()
+                    this.getGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             getGoods: function() {
                 this.goodsarray = []
                 gurl.get().then(result => {
                     result.json().then(data => {
-                        data.forEach(element => this.goodsarray.push(element))
-                    })
-                })
+                        data.forEach(element => this.goodsarray.push(element));
+                    });
+                });
             },
             upd: function(){
                 updateurl.save(this.id + ";" + this.name).then(success => {
-                    this.getGoods()
+                    this.getGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             del: function(){
                 deleteurl.save(this.id).then(success => {
-                    this.getGoods()
+                    this.getGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             }
         },
         created: function(){
-            this.getGoods()
-            
+            this.getGoods();
         }
-    })
+    });
 </script>
 </html>

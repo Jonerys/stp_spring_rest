@@ -8,8 +8,8 @@
     <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
 
+<body>
 <div id="app">
 <table id="main_table"><tbody>
     <tr>
@@ -19,6 +19,7 @@
         <td>{{curgood.name}}</td>
     </tr>
 </tbody></table>
+
 <div class="container2">
     <div id="div_add">
         <button id="add"  onclick="changeVisibility('add', 'add_form')">Добавить</button>
@@ -73,48 +74,47 @@
         methods: {
             add: function(){
                 addurl.save(this.name2).then(success => {
-                    this.getCurGoods()
+                    this.getCurGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             getCurGoods: function() {
-                this.curgoodarray = []
+                this.curgoodarray = [];
                 gwurl.get().then(result => {
                     result.json().then(data => {
-                        
-                        data.goods.forEach(element => this.curgoodarray.push(element))
-                    })
-                })
+                        data.goods.forEach(element => this.curgoodarray.push(element));
+                    });
+                });
             },
             getGoods: function() {
-                this.goodsarray = []
+                this.goodsarray = [];
                 gurl.get().then(result => {
                     result.json().then(data => {
-                        data.forEach(element => this.goodsarray.push(element))
-                    })
-                })
+                        data.forEach(element => this.goodsarray.push(element));
+                    });
+                });
             },
             upd: function(){
                 updateurl.save(this.name1 + ";" + this.name2).then(success => {
-                    this.getCurGoods()
+                    this.getCurGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             del: function(){
                 deleteurl.save(this.name1).then(success => {
-                    this.getCurGoods()
+                    this.getCurGoods();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             }
         },
         created: function(){
-            this.getCurGoods() 
-            this.getGoods()
+            this.getCurGoods();
+            this.getGoods();
         }
-    })
+    });
 </script>
 </body>
 </html>

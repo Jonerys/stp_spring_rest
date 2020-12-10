@@ -7,8 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="js/script.js"></script>
-
 </head>
+
 <body>
 <div id="app">
 <table id="main_table"><tbody>
@@ -21,6 +21,7 @@
         <td>{{warehouse.name}}</td>
     </tr>
 </tbody></table>
+
 <div class="container">
     <div id="div_add">
         <button id="add"  onclick="changeVisibility('add', 'add_form')">Добавить</button>
@@ -68,38 +69,38 @@
         methods: {
             add: function(){
                 addurl.save(this.name).then(success => {
-                    this.getWarehouses()
+                    this.getWarehouses();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             getWarehouses: function() {
-                this.warehousesarray = []
+                this.warehousesarray = [];
                 wurl.get().then(result => {
                     result.json().then(data => {
-                        data.forEach(element => this.warehousesarray.push(element))
-                    })
-                })
+                        data.forEach(element => this.warehousesarray.push(element));
+                    });
+                });
             },
             upd: function(){
                 updateurl.save(this.id + ";" + this.name).then(success => {
-                    this.getWarehouses()
+                    this.getWarehouses();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             },
             del: function(){
                 deleteurl.save(this.id).then(success => {
-                    this.getWarehouses()
+                    this.getWarehouses();
                 }, fail => {
-                    console.log(fail)
-                })
+                    console.log(fail);
+                });
             }
         },
         created: function(){
-            this.getWarehouses() 
+            this.getWarehouses(); 
         }
-    })
+    });
 </script>
 </body>
 </html>
