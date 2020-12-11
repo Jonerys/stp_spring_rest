@@ -4,56 +4,103 @@
     <meta charset="UTF-8"/>
     <title>Список складов</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="js/scriptjs"></script>
-    <script>
-        $(document).ready(function() {
-            getData("/getwarehouseslist");
-            $('#select_u').change(function(){
-                let table = document.getElementById("main_table");
-                let index = 0;
-                let id = $('#select_u').val();
-                for (let i = 0; i < table.rows.length; i++) {
-                    if (table.rows[i].cells[0].innerHTML == id) {
-                        index = i;
-                        break;
-                    }
-                }
-                let name = table.rows[index].cells[1].innerHTML;
-                $('#txt2').val(name);
-            });
-        });
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="js/script.js"></script>
 </head>
+
 <body>
-<table id="main_table"><tbody></tbody></table>
+<div id="app">
+<table id="main_table"><tbody>
+    <tr>
+        <th>ИД</th>
+        <th>Наименование</th>
+    </tr>
+    <tr v-for="warehouse in warehousesarray">
+        <td>{{warehouse.id}}</td>
+        <td>{{warehouse.name}}</td>
+    </tr>
+</tbody></table>
+
 <div class="container">
     <div id="div_add">
         <button id="add"  onclick="changeVisibility('add', 'add_form')">Добавить</button>
         <span id="add_form">
-            <input id="txt" type="text" width="100px" name="name" />
-            <input id="sub_i" type="submit" onclick="sendData('/addwarehouse', '/getwarehouseslist', 'POST', '', $('#txt').val())" value="Подтвердить"/>
+            <input id="txt" type="text" width="100px" v-model="name"/>
+            <input id="sub_i" type="submit" @click="add" value="Подтвердить"/>
             <button id="cancel" onclick="changeVisibility('add_form', 'add')">Отмена</button>
         </span></br>
     </div>
     <div id="div_upd">
         <button id="update" onclick="changeVisibility('update', 'update_form')">Редактировать</button>
         <span id="update_form">
-            <select id="select_u"></select>
-            <input id="txt2" type="text" width="100px" name="name" />
-            <input id="sub_u" type="submit" onclick="sendData('/updatewarehouse', '/getwarehouseslist','POST', $('#select_u').val(), $('#txt2').val())" value="Подтвердить"/>
+            <select id="select_u" v-model="id">
+                <option v-for="warehouse in warehousesarray">{{warehouse.id}}</option>
+            </select>
+            <input id="txt2" type="text" width="100px" v-model="name"/>
+            <input id="sub_u" type="submit" @click="upd" value="Подтвердить"/>
             <button id="cancel2" onclick="changeVisibility('update_form', 'update')">Отмена</button>
         </span></br>
     </div>
     <div id="div_del">
         <button id="delete" onclick="changeVisibility('delete', 'delete_form')">Удалить</button>
         <span id="delete_form">
-            <select id="select_d"></select>
-            <input id="sub_d" type="submit" onclick="sendData('/deletewarehouse', '/getwarehouseslist','POST', $('#select_d').val(), '')" value="Подтвердить"/>
+            <select id="select_d" v-model="id">
+                <option v-for="warehouse in warehousesarray">{{warehouse.id}}</option>
+            </select>
+            <input id="sub_d" type="submit" @click="del" value="Подтвердить"/>
             <button id="cancel3" onclick="changeVisibility('delete_form', 'delete')">Отмена</button>
         </span></br>
     </div>
 </div>
+</div>
+<script>
+    let wurl = Vue.resource("/getwarehouseslist");
+    let addurl = Vue.resource("/addwarehouse");
+    let updateurl = Vue.resource("/updatewarehouse");
+    let deleteurl = Vue.resource("/deletewarehouse");
+    new Vue({
+        el: "#app",
+        data: {
+            id: "",
+            name: "",
+            warehousesarray: []
+        },
+        methods: {
+            add: function(){
+                addurl.save(this.name).then(success => {
+                    this.getWarehouses();
+                }, fail => {
+                    console.log(fail);
+                });
+            },
+            getWarehouses: function() {
+                this.warehousesarray = [];
+                wurl.get().then(result => {
+                    result.json().then(data => {
+                        data.forEach(element => this.warehousesarray.push(element));
+                    });
+                });
+            },
+            upd: function(){
+                updateurl.save(this.id + ";" + this.name).then(success => {
+                    this.getWarehouses();
+                }, fail => {
+                    console.log(fail);
+                });
+            },
+            del: function(){
+                deleteurl.save(this.id).then(success => {
+                    this.getWarehouses();
+                }, fail => {
+                    console.log(fail);
+                });
+            }
+        },
+        created: function(){
+            this.getWarehouses(); 
+        }
+    });
+</script>
 </body>
 </html>

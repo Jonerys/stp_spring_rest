@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/goodslist").hasAuthority(Permission.ADMIN_PERMISSIONS.getPermission())
-                .antMatchers("/getgoodslist").hasAuthority(Permission.ADMIN_PERMISSIONS.getPermission())
+                .antMatchers("/getgoodslist").permitAll()
                 .antMatchers("/addgood").hasAuthority(Permission.ADMIN_PERMISSIONS.getPermission())
                 .antMatchers("/updategood").hasAuthority(Permission.ADMIN_PERMISSIONS.getPermission())
                 .antMatchers("/deletegood").hasAuthority(Permission.ADMIN_PERMISSIONS.getPermission())

@@ -10,25 +10,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @RestController
 public class GoodWarehouseController {
 
     private WarehouseService ws;
     private GoodService gs;
-    private UserService us;
 
     @Autowired
-    public GoodWarehouseController(WarehouseService ws, GoodService gs, UserService us){
-
+    public GoodWarehouseController(WarehouseService ws, GoodService gs){
         this.ws = ws;
         this.gs = gs;
-        this.us = us;
-    }
-
-    @GetMapping("/getdata2")
-    public Good fu(){
-        Good good = gs.findById(1);
-        return good;
     }
 
     @GetMapping("/getdata")
@@ -37,18 +31,38 @@ public class GoodWarehouseController {
         return warehouse;
     }
 
-    @GetMapping("/gw-create")
-    public String createGoodForm(Model model){
-        model.addAttribute("goods", gs.findAll());
-        return "gw-create";
-    }
-
-    @PostMapping("/gw-create")
-    public String createGoodswh(@RequestParam("good") String goodName){
-        Good good = gs.findByName(goodName);
-        Warehouse warehouse = ws.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+    @RequestMapping(value = "/addgtowh", method = RequestMethod.POST)
+    public void addToWarehouse(@RequestBody String data){
+        Good good = gs.findByName(data);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Warehouse warehouse = ws.findByName(username);
         warehouse.addGood(good);
         ws.save(warehouse);
-        return "redirect:/goods-warehouses";
+    }
+
+    @RequestMapping(value = "/updateginwh", method = RequestMethod.POST)
+    public void updInWarehouse(@RequestBody String data){
+        String temp = null;
+        try {
+            temp = URLDecoder.decode(data, StandardCharsets.UTF_8.toString());
+        } catch (Exception e){}
+        String oldGoodName = temp.split(";", 2)[0];
+        String newGoodName = temp.split(";", 2)[1];
+        Good oldGood = gs.findByName(oldGoodName);
+        Good newGood = gs.findByName(newGoodName);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Warehouse warehouse = ws.findByName(username);
+        warehouse.deleteGood(oldGood);
+        warehouse.addGood(newGood);
+        ws.save(warehouse);
+    }
+
+    @RequestMapping(value = "/deletegfromwh", method = RequestMethod.POST)
+    public void delFromWarehouse(@RequestBody String data){
+        Good good = gs.findByName(data);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Warehouse warehouse = ws.findByName(username);
+        warehouse.deleteGood(good);
+        ws.save(warehouse);
     }
 }
